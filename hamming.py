@@ -22,12 +22,7 @@ def parse_args():
 
 
 def result_class(y):
-    _eps = 0.005
-    y_max = np.max(y)
-    for i in range(len(y)):
-        if abs(y[i] - y_max) < _eps:
-            return i
-    return -1
+    return np.argmax(y)
 
 
 class HammingNet:
