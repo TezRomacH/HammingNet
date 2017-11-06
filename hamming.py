@@ -5,8 +5,8 @@ from scipy.spatial.distance import hamming
 
 def parse_args():
     program_examples = '''Example of use:
-    python hamming.py --from=test_4.csv --data=samples_vector.csv
-    python hamming.py --from=vector.csv -i=150 --distance=4
+    python hamming.py --path=test_4.csv --data=samples_vector.csv
+    python hamming.py --path=vector.csv -i=150 --distance=4
     '''
     default_training_set = "samples_vector.csv"
 
@@ -14,10 +14,10 @@ def parse_args():
         description='Hamming net',
         epilog=program_examples,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('-d', '--data', type=str, help='Path to train data set (*.csv)', default=default_training_set)
+    parser.add_argument('-d', '--data', type=str, help='Path to the training data set (*.csv)', default=default_training_set)
     parser.add_argument('-m', '--distance', type=int, default=1, help='Max Hamming distance')
     parser.add_argument('-i', '--iteration', type=int, help='Max count of iterations', default=40)
-    parser.add_argument('-f', '--from', type=str, required=True, help='Path prediction vector (*.csv)')
+    parser.add_argument('-p', '--path', type=str, required=True, help='Path to the vector (*.csv)')
     return parser.parse_args()
 
 
@@ -73,10 +73,13 @@ class HammingNet:
 
 
 args_res = parse_args()
-X = np.genfromtxt("samples_vector.csv", delimiter=',')
-network = HammingNet(max_distance=1)
-print("size of train data set =", X.shape)
+training_data = args_res.data
 
+X = np.genfromtxt(training_data, delimiter=',')
+network = HammingNet(max_distance=args_res.distance, max_iter=args_res.iteration)
+print("size of train data set =", X.shape)
 network.train(X)
-x = np.genfromtxt("test_4.csv", delimiter=',')
+
+path_to_vector = args_res.path
+x = np.genfromtxt(path_to_vector, delimiter=',')
 print("predicted class =", network.predict(x))
