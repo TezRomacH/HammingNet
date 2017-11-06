@@ -26,8 +26,8 @@ def result_class(y):
     y_max = np.max(y)
     for i in range(len(y)):
         if abs(y[i] - y_max) < _eps:
-            return i + 1
-    return 0
+            return i
+    return -1
 
 
 class HammingNet:
